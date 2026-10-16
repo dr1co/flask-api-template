@@ -1,7 +1,5 @@
 FROM python:3.12-slim
 
-ENV ACCEPT_EULA=Y
-
 WORKDIR /app
 
 RUN apt-get update && \
@@ -10,6 +8,13 @@ RUN apt-get update && \
   python3-dev \
   libssl-dev \
   libffi-dev \
+  && rm -rf /var/lib/apt/lists/*
+
+# >>> mssql
+ENV ACCEPT_EULA=Y
+
+RUN apt-get update && \
+  apt-get install -y --no-install-recommends \
   libgssapi-krb5-2 \
   wget \
   gnupg2 \
@@ -32,6 +37,7 @@ RUN apt-get update && \
 
 RUN echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bashrc
 
+# <<< mssql
 COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt

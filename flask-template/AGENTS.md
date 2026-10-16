@@ -25,8 +25,12 @@ the *starting point* every future project inherits, not to a single app.
 - **flask-cors** for CORS.
 - **SQLAlchemy** (plain engine/session, no ORM models and no
   Flask-SQLAlchemy/Alembic wired in) for relational database access,
-  including MSSQL via ODBC (the project's Dockerfile installs the
-  `msodbcsql17` driver).
+  optionally including MSSQL via ODBC (`pyodbc` + the `msodbcsql17` driver).
+  MSSQL support is chosen at generation time: the MSSQL-only parts of
+  `Dockerfile` and `.env.example` sit between `# >>> mssql` / `# <<< mssql`
+  markers, and the generator either strips the markers (opt-in) or deletes
+  the whole block (opt-out). Keep any new MSSQL-only lines inside those
+  markers.
 - **python-dotenv** to load `.env` in development.
 - **gunicorn** as the production WSGI server.
 - **pytest** for testing.
@@ -138,8 +142,9 @@ Before a project generated from this template goes to production:
       specific health-check contract (status codes, payload shape).
 - [ ] Pin dependency versions in `requirements.txt` (avoid re-running
       `pip freeze` against an unpinned environment right before deploying).
-- [ ] Confirm the Dockerfile's MSSQL/ODBC layer is actually needed; if the
-      project doesn't talk to MSSQL, consider trimming it to reduce
+- [ ] If the project was generated with MSSQL support, confirm it's actually
+      needed; if the project doesn't talk to MSSQL, remove the ODBC layer
+      from the Dockerfile and `pyodbc` from `requirements.txt` to reduce
       image size and build time.
 - [ ] Run `pytest` and make sure test coverage reflects the business logic
       actually added to `controllers/`, `schemas/`, etc.

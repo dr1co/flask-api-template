@@ -3,7 +3,7 @@
 A Flask project generator. This repository is not a Flask application itself:
 it is a tool (packaged as a Docker image) that creates a new Flask project
 from a ready-made template, with a layered structure, JWT authentication,
-CORS, relational database support (including MSSQL via ODBC) and
+CORS, relational database support (with optional MSSQL via ODBC) and
 Docker/gunicorn already configured.
 
 ## What the template includes
@@ -27,8 +27,8 @@ The generated project (the [flask-template/](flask-template/) folder) comes with
 - **Authentication** via `flask-jwt-extended` and **CORS** via `flask-cors`,
   already registered in the app factory.
 - **Database** via SQLAlchemy (plain engine/session, no ORM/migrations by
-  default), with MSSQL ODBC drivers already installed in the generated
-  project's Docker image.
+  default). The MSSQL ODBC driver (`msodbcsql17` + `pyodbc`) is optional
+  and chosen at generation time (see [MSSQL support](#mssql-support)).
 - **Production-ready Docker**: the generated project's `Dockerfile` installs
   dependencies from `requirements.txt`, exposes port `8000` and runs with
   `gunicorn`; `docker-compose.yml` for running it locally.
@@ -55,6 +55,33 @@ docker run --rm -it \
 
 If the project name is omitted, the container asks for it interactively.
 
+### MSSQL support
+
+During generation, the container asks whether to include the MSSQL ODBC
+driver:
+
+```
+Include the MSSQL ODBC driver? [y/N]:
+```
+
+- **y**: the generated `Dockerfile` installs Microsoft's `msodbcsql17`
+  driver, `pyodbc` is kept in `requirements.txt`, and `.env.example` includes
+  an example `mssql+pyodbc://` connection string.
+- **N** (default): all of the above is stripped, keeping the image smaller
+  and faster to build.
+
+To skip the prompt (e.g. in scripts), pass `--mssql` or `--no-mssql` after
+the project name:
+
+```sh
+docker run --rm -it \
+  -v "$(pwd):/app/output" -w /app/output \
+  ghcr.io/dr1co/flask-project-template:latest my-project --mssql
+```
+
+When the container runs without a TTY (no `-it`) and no flag is given, MSSQL
+is left out.
+
 > The `:latest` tag always points to the most recent build of `main` -- there
 > are currently no immutable version tags (e.g. per commit). If you need to
 > reproduce a specific version, build the image locally from the desired
@@ -70,9 +97,9 @@ docker run --rm -it -v "$(pwd):/app/output" -w /app/output flask-template-genera
 ```
 
 In both cases, the container copies the files from
-[flask-template/](flask-template/) into `my-project/`, creates an initial
-`.env`, runs `pip freeze > requirements.txt` and initializes a git repository
-in the generated project.
+[flask-template/](flask-template/) into `my-project/`, applies the MSSQL
+choice, creates an initial `.env`, runs `pip freeze > requirements.txt` and
+initializes a git repository in the generated project.
 
 ## After generating the project
 

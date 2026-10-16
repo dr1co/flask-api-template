@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-RUN pip install --no-cache-dir flask flask-jwt-extended flask-cors sqlalchemy python-dotenv gunicorn
+RUN pip install --no-cache-dir flask flask-jwt-extended flask-cors sqlalchemy pyodbc python-dotenv gunicorn
 
 COPY . /app/generator
 
