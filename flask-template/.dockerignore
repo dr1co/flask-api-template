@@ -1,0 +1,38 @@
+# ==========================================
+# Virtual environments, caches and dependencies
+# ==========================================
+venv/
+.venv/
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+.pytest_cache/
+
+# ==========================================
+# Tests (not needed in the production image)
+# ==========================================
+tests/
+pytest.ini
+requirements-dev.txt
+
+# ==========================================
+# Secrets and local configuration
+# ==========================================
+.env
+.env.local
+.env.example
+
+# ==========================================
+# Git files
+# ==========================================
+.git/
+.gitignore
+
+# ==========================================
+# System and IDE files
+# ==========================================
+**/.vscode/
+**/.idea/
+**/.DS_Store
+**/Thumbs.db
