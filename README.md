@@ -47,10 +47,10 @@ branch, the [docker-publish.yml](.github/workflows/docker-publish.yml)
 workflow builds and publishes the image to the GitHub Container Registry:
 
 ```sh
-docker pull ghcr.io/dr1co/flask-project-template:latest
+docker pull ghcr.io/dr1co/flask-api-template:latest
 docker run --rm -it \
   -v "$(pwd):/app/output" -w /app/output \
-  ghcr.io/dr1co/flask-project-template:latest my-project
+  ghcr.io/dr1co/flask-api-template:latest my-project
 ```
 
 If the project name is omitted, the container asks for it interactively.
@@ -76,7 +76,7 @@ the project name:
 ```sh
 docker run --rm -it \
   -v "$(pwd):/app/output" -w /app/output \
-  ghcr.io/dr1co/flask-project-template:latest my-project --mssql
+  ghcr.io/dr1co/flask-api-template:latest my-project --mssql
 ```
 
 When the container runs without a TTY (no `-it`) and no flag is given, MSSQL
@@ -90,8 +90,8 @@ is left out.
 Alternatively, to build the image locally from source:
 
 ```sh
-git clone https://github.com/dr1co/flask-project-template.git
-cd flask-project-template
+git clone https://github.com/dr1co/flask-api-template.git
+cd flask-api-template
 docker build -t flask-template-generator .
 docker run --rm -it -v "$(pwd):/app/output" -w /app/output flask-template-generator my-project
 ```
@@ -146,7 +146,7 @@ Defined in `.env` (see `.env.example` in the generated project):
 The [docker-publish.yml](.github/workflows/docker-publish.yml) workflow runs
 on every push to `main`: it builds the generator image (the root
 `Dockerfile`) and publishes it to
-`ghcr.io/dr1co/flask-project-template:latest` (the image name is derived from
+`ghcr.io/dr1co/flask-api-template:latest` (the image name is derived from
 the repository itself, so forks publish under their own owner). There is
 currently no manual trigger (`workflow_dispatch`) and no per-commit version
 tags -- only `:latest`, always matching the latest commit on `main`.
@@ -154,7 +154,7 @@ tags -- only `:latest`, always matching the latest commit on `main`.
 ## Repository structure
 
 ```
-flask-project-template/
+flask-api-template/
 ├── Dockerfile              # generator image
 ├── entrypoint.sh           # script that creates a new project from the template
 ├── .github/workflows/      # generator image publishing

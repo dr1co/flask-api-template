@@ -67,8 +67,12 @@ file to a folder you haven't touched before.
 
 ## Coding conventions
 
-- **2-space indentation** throughout (Python included) — this is a hard
-  requirement for this repo, not the PEP 8 default.
+- **Python code follows [PEP 8](https://peps.python.org/pep-0008/)**:
+  4-space indentation (never tabs), lines of at most 79 characters, two
+  blank lines between top-level definitions, and imports grouped as
+  standard library, then third-party, then local `src.*`, alphabetized
+  within each group. Wrap long calls inside parentheses rather than with
+  backslashes.
 - **Layering is intentional**: routes stay thin (request/response only) and
   delegate to `controllers/`; data access goes through `db/` or `schemas/`;
   shared cross-cutting code goes in `classes/`. Don't put business logic

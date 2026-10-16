@@ -17,26 +17,31 @@ _SessionLocal = None
 
 
 def init_engine(database_url: str):
-  global _engine, _SessionLocal
+    global _engine, _SessionLocal
 
-  if not database_url:
-    return
+    if not database_url:
+        return
 
-  _engine = create_engine(database_url, pool_pre_ping=True)
-  _SessionLocal = sessionmaker(bind=_engine, autoflush=False, autocommit=False)
+    _engine = create_engine(database_url, pool_pre_ping=True)
+    _SessionLocal = sessionmaker(
+        bind=_engine, autoflush=False, autocommit=False
+    )
 
 
 @contextmanager
 def get_session():
-  if _SessionLocal is None:
-    raise RuntimeError("Database engine is not configured. Set DATABASE_URL and call init_engine().")
+    if _SessionLocal is None:
+        raise RuntimeError(
+            "Database engine is not configured. "
+            "Set DATABASE_URL and call init_engine()."
+        )
 
-  session = _SessionLocal()
-  try:
-    yield session
-    session.commit()
-  except Exception:
-    session.rollback()
-    raise
-  finally:
-    session.close()
+    session = _SessionLocal()
+    try:
+        yield session
+        session.commit()
+    except Exception:
+        session.rollback()
+        raise
+    finally:
+        session.close()
